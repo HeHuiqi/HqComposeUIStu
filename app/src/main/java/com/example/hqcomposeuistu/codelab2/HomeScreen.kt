@@ -27,9 +27,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.hqcomposeuistu.R
@@ -61,14 +67,18 @@ fun HomeScreenPreview() {
 }
 
 @Composable
-fun SootheBottomNavigation(modifier: Modifier = Modifier) {
+fun SootheBottomNavigation(
+    modifier: Modifier = Modifier,
+    selectedIndex:Int = 0,
+    itemClick:(index:Int) -> Unit,
+    ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
         modifier = modifier.navigationBarsPadding()
     ) {
         NavigationBarItem(
-            selected = true,
-            onClick = { /*TODO*/ },
+            selected = selectedIndex == 0,
+            onClick = { itemClick(0) },
             icon = {
                 Icon(imageVector = Icons.Default.Spa, contentDescription = null)
             },
@@ -77,8 +87,8 @@ fun SootheBottomNavigation(modifier: Modifier = Modifier) {
             }
         )
         NavigationBarItem(
-            selected = false,
-            onClick = { /*TODO*/ },
+            selected = selectedIndex == 1,
+            onClick = { itemClick(1)},
             icon = {
                 Icon(imageVector = Icons.Default.AccountCircle, contentDescription = null)
             },
@@ -94,28 +104,45 @@ fun SootheBottomNavigation(modifier: Modifier = Modifier) {
 @Composable
 fun SootheBottomNavigationPreview() {
     HqComposeUIStuTheme {
-        SootheBottomNavigation()
+        SootheBottomNavigation(itemClick = {
+
+        })
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MySootheAppPortrait() {
+    val titles = listOf<String>("首页","我的")
+    var selectedIndex by rememberSaveable {
+        mutableIntStateOf(0)
+    }
+    val bottomItemClick = fun (index:Int){
+        selectedIndex = index
+    }
     HqComposeUIStuTheme {
         Scaffold(
             topBar = {
 
                 TopAppBar(
-                    title = { TopCenterTitle() },
+                    title = { TopCenterTitle(text = titles[selectedIndex]) },
                 )
             },
-            bottomBar = { SootheBottomNavigation() },
+            bottomBar = { SootheBottomNavigation(selectedIndex = selectedIndex,itemClick = bottomItemClick) },
         ) { padding ->
             BoxWithConstraints(modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
             ) {
-                HomeScreen()
+                when (selectedIndex) {
+                    0 -> {
+                        HomeScreen()
+                    }
+                    1 -> {
+                        Text(text = "我的信息")
+                    }
+                }
+                
             }
         }
     }
