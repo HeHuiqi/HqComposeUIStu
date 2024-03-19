@@ -3,12 +3,13 @@ package com.example.hqcomposeuistu.codelab2
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -24,7 +25,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -32,6 +36,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -142,6 +151,7 @@ fun FavoriteCollectionCard(
     @StringRes text:Int,
     modifier: Modifier = Modifier
 ) {
+    // RoundedCornerShape(12.0.dp) 圆角矩形
     Surface(
         shape = MaterialTheme.shapes.medium,
         modifier = modifier
@@ -223,7 +233,9 @@ fun HomeSection(
         Text(
             text = stringResource(id = title),
             style = MaterialTheme.typography.titleMedium,
-            modifier = modifier.paddingFromBaseline(top = 40.dp, bottom = 16.dp).padding(horizontal = 16.dp)
+            modifier = modifier
+                .paddingFromBaseline(top = 40.dp, bottom = 16.dp)
+                .padding(horizontal = 16.dp)
         )
         content()
     }
@@ -259,4 +271,35 @@ fun TopCenterTitle(text: String = "Home") {
 @Composable
 fun TopCenterTitlePreview() {
     TopCenterTitle()
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+fun FlowRowUse(){
+    val filters = listOf(
+        "Washer/Dryer", "Ramp access", "Garden", "Cats OK", "Dogs OK", "Smoke-free"
+    )
+    FlowRow (
+        modifier = Modifier.background(MaterialTheme.colorScheme.primary),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ){
+        filters.forEach { title ->
+            var selected by rememberSaveable { mutableStateOf(false) }
+
+            val leadingIcon : @Composable () -> Unit = {
+                Icon(Icons.Default.Check, null)
+            }
+            FilterChip(
+                selected = selected,
+                onClick = { selected = !selected },
+                label = { Text(text = title, color = Color.White) },
+                leadingIcon = if (selected) leadingIcon else null
+            )
+        }
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun FlowRowUsePreview(){
+    FlowRowUse()
 }

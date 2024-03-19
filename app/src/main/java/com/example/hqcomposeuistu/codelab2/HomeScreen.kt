@@ -1,5 +1,6 @@
 package com.example.hqcomposeuistu.codelab2
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,8 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+
+
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -122,10 +125,12 @@ fun MySootheAppPortrait() {
     }
     HqComposeUIStuTheme {
         Scaffold(
+
             topBar = {
 
                 TopAppBar(
                     title = { TopCenterTitle(text = titles[selectedIndex]) },
+                    modifier = Modifier.background(MaterialTheme.colorScheme.primary)
                 )
             },
             bottomBar = { SootheBottomNavigation(selectedIndex = selectedIndex,itemClick = bottomItemClick) },
