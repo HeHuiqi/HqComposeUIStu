@@ -13,6 +13,12 @@
         android:theme="@style/Theme.HqComposeUIStu"
         tools:targetApi="31">
         <activity
+            android:name=".codelab2.HqBaseLayoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HqFirstActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
